@@ -91,7 +91,7 @@ console.log('User ID:', userId);
 
 #### Simple Select
 ```javascript
-// Get all users - auto-executes when awaited
+// Get all users
 const allUsers = await db.select('users');
 
 // Get specific user by ID
@@ -100,7 +100,7 @@ const user = await db.get('users', 1);
 
 #### Simple Update
 ```javascript
-// Update user - auto-executes when awaited
+// Update user""
 await db.update('users')
     .set({ age: 31 })
     .where('id', '=', 1);
@@ -108,7 +108,7 @@ await db.update('users')
 
 #### Simple Delete
 ```javascript
-// Delete user - auto-executes when awaited
+// Delete user""
 await db.delete('users')
     .where('id', '=', 1);
 ```
@@ -116,7 +116,7 @@ await db.delete('users')
 ### Advanced WHERE Clauses
 
 ```javascript
-// Multiple conditions with AND - auto-executes when awaited
+// Multiple conditions with AND""
 const results = await db.select('users')
     .where('age', '>', 18)
     .and('age', '<', 65);
@@ -150,7 +150,7 @@ const results = await db.select('users')
 ### JOINs and Relationships
 
 ```javascript
-// INNER JOIN - Get users with their orders - auto-executes when awaited
+// INNER JOIN - Get users with their orders""
 const usersWithOrders = await db.select('users')
     .innerJoin('orders', 'users.id', 'orders.userId');
 
@@ -169,7 +169,7 @@ const results = await db.select('users')
 ### Aggregations and Grouping
 
 ```javascript
-// Count total users - auto-executes when awaited
+// Count total users""
 const userCount = await db.count('users');
 
 // Count with conditions
@@ -204,7 +204,7 @@ const userStats = await db.select('users')
 ### Sorting and Pagination
 
 ```javascript
-// Order by single field - auto-executes when awaited
+// Order by single field""
 const sortedUsers = await db.select('users')
     .orderBy('name', 'ASC');
 
@@ -353,7 +353,7 @@ const db = new FastIndexedDB('MyDatabase', 1);
 db.cache.maxSize = 2000; // Increase cache size
 db.cache.ttl = 600000; // 10 minutes TTL
 
-// Cached queries (automatic) - auto-executes when awaited
+// Cached queries (automatic)""
 const users = await db.select('users').where('age', '>', 18);
 // Subsequent identical queries will use cache
 
@@ -572,7 +572,7 @@ new FastIndexedDB(dbName, version)
 | `limit(count)` | Limit result count |
 | `offset(count)` | Skip records |
 | `set(data)` | Set data for UPDATE |
-| `execute()` | Execute query *(optional - auto-executes when awaited)* |
+| `execute()` | Execute query *(optional"")* |
 
 #### Aggregation Methods
 
