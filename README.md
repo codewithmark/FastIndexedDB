@@ -91,8 +91,8 @@ console.log('User ID:', userId);
 
 #### Simple Select
 ```javascript
-// Get all users
-const allUsers = await db.select('users').execute();
+// Get all users - auto-executes when awaited
+const allUsers = await db.select('users');
 
 // Get specific user by ID
 const user = await db.get('users', 1);
@@ -100,50 +100,43 @@ const user = await db.get('users', 1);
 
 #### Simple Update
 ```javascript
-// Update user
+// Update user - auto-executes when awaited
 await db.update('users')
     .set({ age: 31 })
-    .where('id', '=', 1)
-    .execute();
+    .where('id', '=', 1);
 ```
 
 #### Simple Delete
 ```javascript
-// Delete user
+// Delete user - auto-executes when awaited
 await db.delete('users')
-    .where('id', '=', 1)
-    .execute();
+    .where('id', '=', 1);
 ```
 
 ### Advanced WHERE Clauses
 
 ```javascript
-// Multiple conditions with AND
+// Multiple conditions with AND - auto-executes when awaited
 const results = await db.select('users')
     .where('age', '>', 18)
-    .and('age', '<', 65)
-    .execute();
+    .and('age', '<', 65);
 
 // OR conditions
 const results = await db.select('users')
     .where('status', '=', 'active')
-    .or('status', '=', 'pending')
-    .execute();
+    .or('status', '=', 'pending');
 
 // LIKE operator for pattern matching
 const results = await db.select('users')
-    .where('name', 'LIKE', 'John%')
-    .execute();
+    .where('name', 'LIKE', 'John%');
 
 // IN operator for multiple values
 const results = await db.select('users')
-    .where('age', 'IN', [25, 30, 35])
-    .execute();
+    .where('age', 'IN', [25, 30, 35]);
 
 // BETWEEN operator for ranges
 const results = await db.select('users')
-    .where('age', 'BETWEEN', [18, 65])
-    .execute();
+    .where('age', 'BETWEEN', [18, 65]);
 
 // Complex nested conditions
 const results = await db.select('users')
@@ -151,61 +144,53 @@ const results = await db.select('users')
     .and(builder => 
         builder.where('status', '=', 'active')
                .or('status', '=', 'premium')
-    )
-    .execute();
+    );
 ```
 
 ### JOINs and Relationships
 
 ```javascript
-// INNER JOIN - Get users with their orders
+// INNER JOIN - Get users with their orders - auto-executes when awaited
 const usersWithOrders = await db.select('users')
-    .innerJoin('orders', 'users.id', 'orders.userId')
-    .execute();
+    .innerJoin('orders', 'users.id', 'orders.userId');
 
 // LEFT JOIN - Get all users, including those without orders
 const allUsersWithOrders = await db.select('users')
-    .leftJoin('orders', 'users.id', 'orders.userId')
-    .execute();
+    .leftJoin('orders', 'users.id', 'orders.userId');
 
 // Multiple JOINs with WHERE conditions
 const results = await db.select('users')
     .innerJoin('orders', 'users.id', 'orders.userId')
     .leftJoin('products', 'orders.productId', 'products.id')
     .where('users.age', '>', 25)
-    .and('orders.status', '=', 'completed')
-    .execute();
+    .and('orders.status', '=', 'completed');
 ```
 
 ### Aggregations and Grouping
 
 ```javascript
-// Count total users
-const userCount = await db.count('users').execute();
+// Count total users - auto-executes when awaited
+const userCount = await db.count('users');
 
 // Count with conditions
 const activeUserCount = await db.count('users')
-    .where('status', '=', 'active')
-    .execute();
+    .where('status', '=', 'active');
 
 // SUM aggregation
 const totalOrderValue = await db.select('orders')
-    .sum('amount')
-    .execute();
+    .sum('amount');
 
 // GROUP BY with aggregations
 const ordersByStatus = await db.select('orders')
     .groupBy('status')
     .count()
-    .sum('amount')
-    .execute();
+    .sum('amount');
 
 // HAVING clause for filtering groups
 const highValueStatuses = await db.select('orders')
     .groupBy('status')
     .sum('amount', 'totalAmount')
-    .having('totalAmount', '>', 1000)
-    .execute();
+    .having('totalAmount', '>', 1000);
 
 // Multiple aggregations
 const userStats = await db.select('users')
@@ -213,36 +198,31 @@ const userStats = await db.select('users')
     .count('userCount')
     .avg('age', 'avgAge')
     .min('age', 'minAge')
-    .max('age', 'maxAge')
-    .execute();
+    .max('age', 'maxAge');
 ```
 
 ### Sorting and Pagination
 
 ```javascript
-// Order by single field
+// Order by single field - auto-executes when awaited
 const sortedUsers = await db.select('users')
-    .orderBy('name', 'ASC')
-    .execute();
+    .orderBy('name', 'ASC');
 
 // Order by multiple fields
 const sortedUsers = await db.select('users')
     .orderBy('department', 'ASC')
-    .orderBy('age', 'DESC')
-    .execute();
+    .orderBy('age', 'DESC');
 
 // Pagination with LIMIT and OFFSET
 const page1 = await db.select('users')
     .orderBy('id', 'ASC')
     .limit(10)
-    .offset(0)
-    .execute();
+    .offset(0);
 
 const page2 = await db.select('users')
     .orderBy('id', 'ASC')
     .limit(10)
-    .offset(10)
-    .execute();
+    .offset(10);
 ```
 
 ### Bulk Operations
@@ -373,8 +353,8 @@ const db = new FastIndexedDB('MyDatabase', 1);
 db.cache.maxSize = 2000; // Increase cache size
 db.cache.ttl = 600000; // 10 minutes TTL
 
-// Cached queries (automatic)
-const users = await db.select('users').where('age', '>', 18).execute();
+// Cached queries (automatic) - auto-executes when awaited
+const users = await db.select('users').where('age', '>', 18);
 // Subsequent identical queries will use cache
 
 // Manual cache control
@@ -390,8 +370,7 @@ console.log('Cache hit rate:', db.cache.hitCount / (db.cache.hitCount + db.cache
 ```javascript
 try {
     const result = await db.select('users')
-        .where('age', '>', 18)
-        .execute();
+        .where('age', '>', 18); 
 } catch (error) {
     if (error.name === 'NotFoundError') {
         console.log('Table not found');
@@ -471,8 +450,7 @@ class OrderManager {
             .innerJoin('orderItems', 'orders.id', 'orderItems.orderId')
             .innerJoin('products', 'orderItems.productId', 'products.id')
             .where('customers.id', '=', customerId)
-            .orderBy('orders.orderDate', 'DESC')
-            .execute();
+            .orderBy('orders.orderDate', 'DESC'); // Auto-executes when awaited
     }
 
     // Get sales report by category for date range
@@ -486,8 +464,7 @@ class OrderManager {
             .sum('orderItems.quantity * orderItems.price', 'totalRevenue')
             .sum('orderItems.quantity', 'totalQuantity')
             .count('orders.id', 'orderCount')
-            .orderBy('totalRevenue', 'DESC')
-            .execute();
+            .orderBy('totalRevenue', 'DESC'); // Auto-executes when awaited
     }
 
     // Process bulk order with transaction
@@ -579,7 +556,6 @@ new FastIndexedDB(dbName, version)
 | `enableSync(options)` | Enable background sync |
 | `clearCache(table?)` | Clear query cache |
 
-### QueryBuilder Class
 
 #### Chainable Methods
 
@@ -596,7 +572,7 @@ new FastIndexedDB(dbName, version)
 | `limit(count)` | Limit result count |
 | `offset(count)` | Skip records |
 | `set(data)` | Set data for UPDATE |
-| `execute()` | Execute query |
+| `execute()` | Execute query *(optional - auto-executes when awaited)* |
 
 #### Aggregation Methods
 
